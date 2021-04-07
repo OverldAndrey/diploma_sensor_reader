@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.ML" Version="1.5.5" />
+      <PackageReference Include="System.IO.Ports" Version="6.0.0-preview.1.21102.12" />
+    </ItemGroup>
+
+    <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+        <Copy SourceFiles="datasets/data1.txt" DestinationFolder="$(OutDir)" />
+        <Copy SourceFiles="datasets/data2.txt" DestinationFolder="$(OutDir)" />
+        <Copy SourceFiles="datasets/data12.txt" DestinationFolder="$(OutDir)" />
+        <Copy SourceFiles="datasets/data1S.txt" DestinationFolder="$(OutDir)" />
+    </Target>
+
+</Project>
