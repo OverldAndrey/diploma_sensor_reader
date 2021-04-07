@@ -1,0 +1,1 @@
+﻿# Bachelor diploma project
