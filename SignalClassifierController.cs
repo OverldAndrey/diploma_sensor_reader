@@ -33,6 +33,24 @@ namespace TestSensors
             public uint PredictedLabel { get; set; }
             public float[] Score { get; set; }
         }
+        
+        public class PredictionResult
+        {
+            public string prediction;
+            public float[] classPercentages;
+
+            public PredictionResult(string _prediction, float[] _classPercentages)
+            {
+                prediction = _prediction;
+                classPercentages = _classPercentages;
+            }
+
+            public override string ToString()
+            {
+                return "Predicted: " + prediction + "\n" +
+                       "Scores: " + String.Join(";", classPercentages) + "\n\n";
+            }
+        }
 
         public SignalClassifierController()
         {
@@ -43,7 +61,7 @@ namespace TestSensors
             var trainingDataView = reader.Load("data1.txt", "data2.txt", "data12.txt", "data1S.txt");
 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
-                //.Append(mlContext.Transforms.NormalizeMinMax("readings", fixZero: true))
+                .Append(mlContext.Transforms.NormalizeMinMax("readings", fixZero: true))
                 .Append(mlContext.MulticlassClassification.Trainers
                     .OneVersusAll(mlContext.BinaryClassification.Trainers
                         .LdSvm(featureColumnName: "readings")));
@@ -53,7 +71,7 @@ namespace TestSensors
             Console.WriteLine("Model fitted");
         }
 
-        public string predict(short[] data)
+        public PredictionResult predict(short[] data)
         {
             var dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
                 new SensorFrame()
@@ -72,9 +90,10 @@ namespace TestSensors
             //var test = transformedData.GetColumn<Vector<Single>>(transformedData.Schema.GetColumnOrNull("Score").Value);
             var predictedIndex = predictions[0].PredictedLabel - 1;
 
-            return "Predicted: " + categories[predictedIndex] + "\n" +
-                   "Scores: " + predictions[0].Score[0] + ";" + predictions[0].Score[1] + ";" + 
-                   + predictions[0].Score[2] + ";" + predictions[0].Score[3] + "\n\n";
+            return new PredictionResult(categories[predictedIndex], predictions[0].Score);
+            //"Predicted: " + categories[predictedIndex] + "\n" +
+            //   "Scores: " + predictions[0].Score[0] + ";" + predictions[0].Score[1] + ";" + 
+            //   + predictions[0].Score[2] + ";" + predictions[0].Score[3] + "\n\n";
         }
 
         public short[] convertFrame(IEnumerable<IEnumerable<short>> frame)
