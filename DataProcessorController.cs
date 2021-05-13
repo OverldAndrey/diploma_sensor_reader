@@ -23,14 +23,22 @@ namespace TestSensors
             
             readings = readings.Append(data).Skip(1).ToArray();
             
-            if (readings.ToArray()[readings.ToArray().Length - 1].All(d => d == 0)
-                && readings.ToArray()[readings.ToArray().Length - 2].Any(d => d != 0))
+            if (
+                readings.ToArray()[readings.ToArray().Length - 1].All(d => d == 0)
+                && readings.ToArray()[readings.ToArray().Length - 2].Any(d => d != 0)
+            )
             {
                 dataSetWriter.writeData(readings);
             
                 var frame = readings.Skip(
                     Array.FindLastIndex(readings.SkipLast(1).ToArray(),
-                        d => d.All(dd => dd == 0)));
+                        d => d.All(dd => dd == 0))).ToList();
+
+                if (frame.All(framePart => framePart.All(num => num < 100)) || frame.Count < 4)
+                {
+                    Console.WriteLine("Drop");
+                    return;
+                }
 
                 Console.WriteLine(predictHalfFrame(frame));
             }

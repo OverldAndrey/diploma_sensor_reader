@@ -5,13 +5,16 @@ using System.Numerics;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
+using Microsoft.ML.Data.DataView;
 
 namespace TestSensors
 {
     public class SignalClassifierController
     {
         private MLContext mlContext;
-        public TransformerChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> model;
+        public MulticlassPredictionTransformer<OneVersusAllModelParameters> model;
+        public EstimatorChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> estimatorPipeline;
+        public TransformerChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> transformer;
         
         public string[] categories = new string[] {"First", "Second", "Both", "FirstStrong"};
         
@@ -60,15 +63,31 @@ namespace TestSensors
 
             var trainingDataView = reader.Load("data1.txt", "data2.txt", "data12.txt", "data1S.txt");
 
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
+            var split = mlContext.Data.TrainTestSplit(trainingDataView, testFraction: 0.3);
+
+            estimatorPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
                 .Append(mlContext.Transforms.NormalizeMinMax("readings", fixZero: true))
                 .Append(mlContext.MulticlassClassification.Trainers
                     .OneVersusAll(mlContext.BinaryClassification.Trainers
                         .LdSvm(featureColumnName: "readings")));
 
-            model = pipeline.Fit(trainingDataView);
+            transformer = estimatorPipeline.Fit(split.TrainSet);
+
+            var OVAEstimator = mlContext.MulticlassClassification.Trainers
+                .OneVersusAll(mlContext.BinaryClassification.Trainers
+                    .LdSvm(featureColumnName: "readings"));
+
+            var transformedTrainingData = transformer.Transform(split.TrainSet);
+
+            model = OVAEstimator.Fit(transformedTrainingData);
             
             Console.WriteLine("Model fitted");
+
+            var transformedTestData = transformer.Transform(split.TestSet);
+
+            var testPredictions = model.Transform(transformedTestData);
+            
+            Console.WriteLine(mlContext.MulticlassClassification.Evaluate(testPredictions).ConfusionMatrix.GetFormattedConfusionTable());
         }
 
         public PredictionResult predict(short[] data)
@@ -81,10 +100,12 @@ namespace TestSensors
                 1
                 ));
 
-            var transformedData = model.Transform(dataView);
+            var transformedData = transformer.Transform(dataView);
+
+            var predictedData = model.Transform(transformedData);
 
             var predictions =
-                mlContext.Data.CreateEnumerable<Prediction>(transformedData, reuseRowObject: false).ToArray();
+                mlContext.Data.CreateEnumerable<Prediction>(predictedData, reuseRowObject: false).ToArray();
             
             //Console.WriteLine(predictions[0].PredictedLabel);
             //var test = transformedData.GetColumn<Vector<Single>>(transformedData.Schema.GetColumnOrNull("Score").Value);
