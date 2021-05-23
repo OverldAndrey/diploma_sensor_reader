@@ -13,10 +13,8 @@ namespace TestSensors
 
         private Program()
         {
-            var usbController = new SensorUSBController("COM6");
-            var processorController = new DataProcessorController();
-            
-            processorController.readings = Enumerable.Repeat(Enumerable.Repeat<short>(0, 2), 100);
+            var usbController = new SensorUSBController("COM4");
+            var processorController = new DataProcessorController(14);
 
             usbController.sensorDataReceived += processorController.sensorDataHandler;
  

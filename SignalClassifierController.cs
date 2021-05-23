@@ -15,16 +15,36 @@ namespace TestSensors
         public MulticlassPredictionTransformer<OneVersusAllModelParameters> model;
         public EstimatorChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> estimatorPipeline;
         public TransformerChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> transformer;
-        
-        public string[] categories = new string[] {"First", "Second", "Both", "FirstStrong"};
+
+        public string[] categories = new string[] {"Caress", "Scratch", "OtherLow", "OtherHigh"};
         
         public class SensorFrame
         {
-            [LoadColumn(0, 99)]
-            [VectorType(100)]
+            [LoadColumn(0, 14 * 100 - 1)]
+            [VectorType(14 * 100)]
             public Single[] readings { get; set; }
 
-            [LoadColumn(100)]
+            [LoadColumn(14 * 100)]
+            public string Label { get; set; }
+        }
+        
+        public class SensorHalfFrame
+        {
+            [LoadColumn(0, 14 * 50 - 1)]
+            [VectorType(14 * 50)]
+            public Single[] readings { get; set; }
+
+            [LoadColumn(14 * 50)]
+            public string Label { get; set; }
+        }
+        
+        public class SensorDoubleFrame
+        {
+            [LoadColumn(0, 14 * 200 - 1)]
+            [VectorType(14 * 200)]
+            public Single[] readings { get; set; }
+
+            [LoadColumn(14 * 200)]
             public string Label { get; set; }
         }
         
@@ -55,15 +75,15 @@ namespace TestSensors
             }
         }
 
-        public SignalClassifierController()
+        public SignalClassifierController(string frameSize)
         {
             mlContext = new MLContext();
 
-            var reader = mlContext.Data.CreateTextLoader<SensorFrame>(separatorChar: ',', hasHeader: false);
+            var reader = getFrameReader(frameSize);
 
-            var trainingDataView = reader.Load("data1.txt", "data2.txt", "data12.txt", "data1S.txt");
+            var trainingDataView = reader.Load("dataCaress.txt", "dataScratch.txt", "dataOther.txt");
 
-            var split = mlContext.Data.TrainTestSplit(trainingDataView, testFraction: 0.3);
+            var split = mlContext.Data.TrainTestSplit(trainingDataView, testFraction: 0.2);
 
             estimatorPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
                 .Append(mlContext.Transforms.NormalizeMinMax("readings", fixZero: true))
@@ -84,10 +104,35 @@ namespace TestSensors
             Console.WriteLine("Model fitted");
 
             var transformedTestData = transformer.Transform(split.TestSet);
-
+            
             var testPredictions = model.Transform(transformedTestData);
             
             Console.WriteLine(mlContext.MulticlassClassification.Evaluate(testPredictions).ConfusionMatrix.GetFormattedConfusionTable());
+        }
+
+        private TextLoader getHalfFrameReader()
+        {
+            return mlContext.Data.CreateTextLoader<SensorHalfFrame>(separatorChar: ',', hasHeader: false);
+        }
+        
+        private TextLoader getSingleFrameReader()
+        {
+            return mlContext.Data.CreateTextLoader<SensorFrame>(separatorChar: ',', hasHeader: false);
+        }
+        
+        private TextLoader getDoubleFrameReader()
+        {
+            return mlContext.Data.CreateTextLoader<SensorDoubleFrame>(separatorChar: ',', hasHeader: false);
+        }
+
+        private TextLoader getFrameReader(string frameSize)
+        {
+            switch (frameSize)
+            {
+                case "half": return getHalfFrameReader();
+                case "double": return getSingleFrameReader();
+                default: return getSingleFrameReader();
+            }
         }
 
         public PredictionResult predict(short[] data)
