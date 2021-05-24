@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -16,37 +17,7 @@ namespace TestSensors
         public EstimatorChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> estimatorPipeline;
         public TransformerChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> transformer;
 
-        public string[] categories = new string[] {"Caress", "Scratch", "OtherLow", "OtherHigh"};
-        
-        public class SensorFrame
-        {
-            [LoadColumn(0, 14 * 100 - 1)]
-            [VectorType(14 * 100)]
-            public Single[] readings { get; set; }
-
-            [LoadColumn(14 * 100)]
-            public string Label { get; set; }
-        }
-        
-        public class SensorHalfFrame
-        {
-            [LoadColumn(0, 14 * 50 - 1)]
-            [VectorType(14 * 50)]
-            public Single[] readings { get; set; }
-
-            [LoadColumn(14 * 50)]
-            public string Label { get; set; }
-        }
-        
-        public class SensorDoubleFrame
-        {
-            [LoadColumn(0, 14 * 200 - 1)]
-            [VectorType(14 * 200)]
-            public Single[] readings { get; set; }
-
-            [LoadColumn(14 * 200)]
-            public string Label { get; set; }
-        }
+        public string[] categories;
         
         private class Prediction
         {
@@ -75,13 +46,15 @@ namespace TestSensors
             }
         }
 
-        public SignalClassifierController(string frameSize)
+        public SignalClassifierController(string frameSize, string sensorType, string[] datasets, string[] labels)
         {
             mlContext = new MLContext();
 
-            var reader = getFrameReader(frameSize);
+            categories = labels;
 
-            var trainingDataView = reader.Load("dataCaress.txt", "dataScratch.txt", "dataOther.txt");
+            var reader = getFrameReader(frameSize, sensorType);
+
+            var trainingDataView = reader.Load(datasets);
 
             var split = mlContext.Data.TrainTestSplit(trainingDataView, testFraction: 0.2);
 
@@ -110,40 +83,119 @@ namespace TestSensors
             Console.WriteLine(mlContext.MulticlassClassification.Evaluate(testPredictions).ConfusionMatrix.GetFormattedConfusionTable());
         }
 
-        private TextLoader getHalfFrameReader()
+        private TextLoader getHalfFrameReader(string sensorType)
         {
-            return mlContext.Data.CreateTextLoader<SensorHalfFrame>(separatorChar: ',', hasHeader: false);
-        }
-        
-        private TextLoader getSingleFrameReader()
-        {
-            return mlContext.Data.CreateTextLoader<SensorFrame>(separatorChar: ',', hasHeader: false);
-        }
-        
-        private TextLoader getDoubleFrameReader()
-        {
-            return mlContext.Data.CreateTextLoader<SensorDoubleFrame>(separatorChar: ',', hasHeader: false);
-        }
-
-        private TextLoader getFrameReader(string frameSize)
-        {
-            switch (frameSize)
+            if (sensorType == "four")
             {
-                case "half": return getHalfFrameReader();
-                case "double": return getSingleFrameReader();
-                default: return getSingleFrameReader();
+                return mlContext.Data.CreateTextLoader<FourSensorsHalfFrame>(separatorChar: ',', hasHeader: false);
+            }
+            else
+            {
+                return mlContext.Data.CreateTextLoader<TwoSensorsHalfFrame>(separatorChar: ',', hasHeader: false);
+            }
+        }
+        
+        private TextLoader getSingleFrameReader(string sensorType)
+        {
+            if (sensorType == "four")
+            {
+                return mlContext.Data.CreateTextLoader<FourSensorsSingleFrame>(separatorChar: ',', hasHeader: false);
+            }
+            else
+            {
+                return mlContext.Data.CreateTextLoader<TwoSensorsSingleFrame>(separatorChar: ',', hasHeader: false);
+            }
+        }
+        
+        private TextLoader getDoubleFrameReader(string sensorType)
+        {
+            if (sensorType == "four")
+            {
+                return mlContext.Data.CreateTextLoader<FourSensorsDoubleFrame>(separatorChar: ',', hasHeader: false);
+            }
+            else
+            {
+                return mlContext.Data.CreateTextLoader<TwoSensorsDoubleFrame>(separatorChar: ',', hasHeader: false);
             }
         }
 
-        public PredictionResult predict(short[] data)
+        private TextLoader getFrameReader(string frameSize, string sensorType)
         {
-            var dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
-                new SensorFrame()
-                    {
-                        readings = data.Select(d => (float) d).ToArray()
-                    },
-                1
-                ));
+            switch (frameSize)
+            {
+                case "half": return getHalfFrameReader(sensorType);
+                case "double": return getDoubleFrameReader(sensorType);
+                default: return getSingleFrameReader(sensorType);
+            }
+        }
+
+        public PredictionResult predict(string frameSize, string sensorType, short[] data)
+        {
+            Console.WriteLine(frameSize, sensorType);
+            // var dataView = mlContext.Data.LoadFromEnumerable(getFrameEnumerable(frameSize, sensorType, data));
+            IDataView dataView;
+            
+            if (sensorType == "four")
+            {
+                switch (frameSize)
+                {
+                    case "half": dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
+                        new FourSensorsHalfFrame()
+                        {
+                            readings = data.Select(d => (float) d).ToArray()
+                        },
+                        1
+                    ));
+                        break;
+                    case "double": dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
+                            new FourSensorsDoubleFrame()
+                            {
+                                readings = data.Select(d => (float) d).ToArray()
+                            },
+                            1
+                        ));
+                        break;
+                    default: dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
+                            new FourSensorsSingleFrame()
+                            {
+                                readings = data.Select(d => (float) d).ToArray()
+                            },
+                            1
+                        ));
+                        break;
+                }
+                
+            }
+            else
+            {
+                switch (frameSize)
+                {
+                    case "half": dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
+                            new TwoSensorsHalfFrame()
+                            {
+                                readings = data.Select(d => (float) d).ToArray()
+                            },
+                            1
+                        ));
+                        break;
+                    case "double": dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
+                            new TwoSensorsDoubleFrame()
+                            {
+                                readings = data.Select(d => (float) d).ToArray()
+                            },
+                            1
+                        ));
+                        break;
+                    default: dataView = mlContext.Data.LoadFromEnumerable(Enumerable.Repeat(
+                            new TwoSensorsSingleFrame()
+                            {
+                                readings = data.Select(d => (float) d).ToArray()
+                            },
+                            1
+                        ));
+                        break;
+                }
+            }
 
             var transformedData = transformer.Transform(dataView);
 

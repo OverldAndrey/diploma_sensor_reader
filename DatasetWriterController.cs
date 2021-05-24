@@ -9,7 +9,9 @@ namespace TestSensors
     {
         private StreamWriter dataSetFile;
 
-        public DatasetWriterController(string fileName)
+        private int sensorQty = 0;
+
+        public DatasetWriterController(string fileName, int _sensorQty)
         {
             dataSetFile = new StreamWriter(fileName);
             dataSetFile.AutoFlush = true;
@@ -17,14 +19,19 @@ namespace TestSensors
             // var zeroStr = "";
             // var fullStr = "";
             //
-            // for (int i = 0; i < 14 * 100; i++)
+            // for (int i = 0; i < _sensorQty * 200; i++)
             // {
             //     zeroStr += "0,";
             //     fullStr += "1024,";
             // }
             //
-            // dataSetFile.Write(zeroStr + "OtherLow" + '\n');
-            // dataSetFile.Write(fullStr + "OtherHigh" + '\n');
+            // for (int i = 0; i < 100; i++)
+            // {
+            //     dataSetFile.Write(zeroStr + "OtherLow" + '\n');
+            //     dataSetFile.Write(fullStr + "OtherHigh" + '\n');
+            // }
+
+            sensorQty = _sensorQty;
         }
 
         public void writeData(IEnumerable<IEnumerable<short>> data)
@@ -40,17 +47,19 @@ namespace TestSensors
             // {
             //     adjustedFrame[i] = frameArray[i];
             // }
-            var adjustedFrame = data.ToArray();
+            var adjustedFrame = data.Select(d => d.ToArray()).ToArray();
 
             var resStr = "";
 
-            for (int j = 0; j < 14; j++)
+            for (int j = 0; j < sensorQty; j++)
             {
                 for (int i = 0; i < adjustedFrame.Length; i++)
                 {
-                    resStr += adjustedFrame[i].ToArray()[j].ToString() + ',';
+                    resStr += adjustedFrame[i][j].ToString() + ',';
                 }
             }
+
+            adjustedFrame = null;
 
             // for (int i = 0; i < adjustedFrame.Length; i++)
             // {

@@ -22,6 +22,7 @@ namespace TestSensors
             var eventArgs = new SensorUSBEventArgs();
             eventArgs.sensorData = sensorData;
             sensorDataReceived?.Invoke(this, eventArgs);
+            eventArgs = null;
         }
     }
 

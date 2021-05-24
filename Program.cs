@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TestSensors
 {
@@ -14,7 +12,7 @@ namespace TestSensors
         private Program()
         {
             var usbController = new SensorUSBController("COM4");
-            var processorController = new DataProcessorController(14);
+            var processorController = new DataProcessorController(4, 2, 2, 2);
 
             usbController.sensorDataReceived += processorController.sensorDataHandler;
  
