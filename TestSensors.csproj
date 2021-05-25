@@ -10,11 +10,17 @@
       <PackageReference Include="System.IO.Ports" Version="6.0.0-preview.1.21102.12" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="datasets/*.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
-        <Copy SourceFiles="datasets/data1.txt" DestinationFolder="$(OutDir)" />
-        <Copy SourceFiles="datasets/data2.txt" DestinationFolder="$(OutDir)" />
-        <Copy SourceFiles="datasets/data12.txt" DestinationFolder="$(OutDir)" />
-        <Copy SourceFiles="datasets/data1S.txt" DestinationFolder="$(OutDir)" />
+<!--        <Copy SourceFiles="datasets/*" DestinationFolder="$(OutDir)" />-->
+<!--        <Copy SourceFiles="datasets/data2.txt" DestinationFolder="$(OutDir)" />-->
+<!--        <Copy SourceFiles="datasets/data12.txt" DestinationFolder="$(OutDir)" />-->
+<!--        <Copy SourceFiles="datasets/data1S.txt" DestinationFolder="$(OutDir)" />-->
     </Target>
 
 </Project>

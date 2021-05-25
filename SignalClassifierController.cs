@@ -131,7 +131,6 @@ namespace TestSensors
 
         public PredictionResult predict(string frameSize, string sensorType, short[] data)
         {
-            Console.WriteLine(frameSize, sensorType);
             // var dataView = mlContext.Data.LoadFromEnumerable(getFrameEnumerable(frameSize, sensorType, data));
             IDataView dataView;
             

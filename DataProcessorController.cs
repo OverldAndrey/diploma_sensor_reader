@@ -7,30 +7,38 @@ namespace TestSensors
     public class DataProcessorController
     {
         private static string[] topHeadDatasets =
-            {"topHeadDataOther.txt"};
+            {"topHeadDataCaress.txt", "topHeadDataScratch.txt", "topHeadDataPoke.txt",
+                "topHeadDataStrike.txt", "topHeadDataOther.txt"};
         private static string[] leftSideHeadDatasets =
-            {"leftSideHeadDataOther.txt"};
+            {"leftSideHeadDataCaress.txt", "leftSideHeadDataScratch.txt",
+                "leftSideHeadDataPoke.txt", "leftSideHeadDataStrike.txt", "leftSideHeadDataOther.txt"};
         private static string[] rightSideHeadDatasets =
-            {"rightSideHeadDataOther.txt"};
+            {"rightSideHeadDataCaress.txt", "rightSideHeadDataScratch.txt", "rightSideHeadDataPoke.txt",
+                "rightSideHeadDataStrike.txt", "rightSideHeadDataOther.txt"};
         private static string[] leftHandDatasets =
-            {"leftHandDataOther.txt"};
+            {"leftHandDataPoke.txt", "leftHandDataShakeHold.txt", "leftHandDataShakeGrip.txt",
+                "leftHandDataOther.txt"};
         private static string[] rightHandDatasets =
-            {"rightHandDataOther.txt"};
+            {"rightHandDataPoke.txt", "rightHandDataShakeHold.txt", "rightHandDataShakeGrip.txt",
+                "rightHandDataOther.txt"};
         private static string[] frontDatasets =
-            {"frontDataOther.txt"};
+            {"frontDataCaress.txt", "frontDataScratch.txt", "frontDataPoke.txt", "frontDataOther.txt"};
         
         private static string[] topHeadLabels =
-            {"OtherLowTopHead", "OtherHighTopHead"};
+            {"CaressTopHead", "ScratchTopHead", "PokeTopHead", "StrikeTopHead",
+                "OtherLowTopHead", "OtherHighTopHead"};
         private static string[] leftSideHeadLabels =
-            {"OtherLowLeftSideHead", "OtherHighLeftSideHead"};
+            {"CaressLeftSideHead", "ScratchLeftSideHead", "PokeLeftSideHead", "StrikeLeftSideHead",
+                "OtherLowLeftSideHead", "OtherHighLeftSideHead"};
         private static string[] rightSideHeadLabels =
-            {"OtherLowRightSideHead", "OtherHighRightSideHead"};
+            {"CaressRightSideHead", "ScratchRightSideHead", "PokeRightSideHead", "StrikeRightSideHead",
+                "OtherLowRightSideHead", "OtherHighRightSideHead"};
         private static string[] leftHandLabels =
-            {"OtherLowLeftHand", "OtherHighLeftHand"};
+            {"PokeLeftHand", "ShakeHoldLeftHand", "ShakeGripLeftHand", "OtherLowLeftHand", "OtherHighLeftHand"};
         private static string[] rightHandLabels =
-            {"OtherLowRightHand", "OtherHighRightHand"};
+            {"PokeRightHand", "ShakeHoldRightHand", "ShakeGripRightHand", "OtherLowRightHand", "OtherHighRightHand"};
         private static string[] frontLabels =
-            {"OtherLowFront", "OtherHighFront"};
+            {"CaressFront", "ScratchFront", "PokeFront", "OtherLowFront", "OtherHighFront"};
         public event EventHandler<DataProcessorEventArgs> sensorDataProcessed;
 
         private event EventHandler<SensorUSBEventArgs> topHeadSensorDataArrived;
@@ -152,7 +160,7 @@ namespace TestSensors
             {
                 // topHeadDataSetWriter.writeData(topHeadReadings);
 
-                topHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                // topHeadSensorDataArrived.Invoke(this, USBeventArgs);
             }
             
             if (
@@ -162,7 +170,7 @@ namespace TestSensors
             {
                 // leftSideHeadDataSetWriter.writeData(leftSideHeadReadings);
 
-                leftSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                // leftSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
             }
             
             if (
@@ -172,7 +180,7 @@ namespace TestSensors
             {
                 // rightSideHeadDataSetWriter.writeData(rightSideHeadReadings);
 
-                rightSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                // rightSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
             }
 
             if (
@@ -180,9 +188,16 @@ namespace TestSensors
                 && rightHandReadings.ToArray()[1].Any(d => d != 0)
             )
             {
-                // rightHandDataSetWriter.writeData(rightHandReadings);
+                if (rightHandReadings.All(r => r.All(rr => rr < 100)))
+                {
+                    Console.WriteLine("Drop");
+                }
+                else
+                {
+                    // rightHandDataSetWriter.writeData(rightHandReadings);
 
-                rightHandSensorDataArrived.Invoke(this, USBeventArgs);
+                    // rightHandSensorDataArrived.Invoke(this, USBeventArgs);
+                }
             }
 
             if (
@@ -190,9 +205,16 @@ namespace TestSensors
                 && leftHandReadings.ToArray()[1].Any(d => d != 0)
             )
             {
-                // leftHandDataSetWriter.writeData(leftHandReadings);
+                if (leftHandReadings.All(r => r.All(rr => rr < 100)))
+                {
+                    Console.WriteLine("Drop");
+                }
+                else
+                {
+                    // leftHandDataSetWriter.writeData(leftHandReadings);
 
-                leftHandSensorDataArrived.Invoke(this, USBeventArgs);
+                    leftHandSensorDataArrived.Invoke(this, USBeventArgs);
+                }
             }
 
             if (
@@ -200,9 +222,16 @@ namespace TestSensors
                 && frontReadings.ToArray()[1].Any(d => d != 0)
             )
             {
-                // frontDataSetWriter.writeData(frontReadings);
+                if (frontReadings.All(r => r.All(rr => rr < 100)))
+                {
+                    Console.WriteLine("Drop");
+                }
+                else
+                {
+                    // frontDataSetWriter.writeData(frontReadings);
 
-                frontSensorDataArrived.Invoke(this, USBeventArgs);
+                    // frontSensorDataArrived.Invoke(this, USBeventArgs);
+                }
             }
         }
 

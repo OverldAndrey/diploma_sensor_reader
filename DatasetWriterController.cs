@@ -74,7 +74,7 @@ namespace TestSensors
             //    string.Join(',', d.Select(dd => dd.ToString()))).ToArray()) + '\n';
             Console.WriteLine(resStr + '\n');
             //var array = System.Text.Encoding.Default.GetBytes(str);
-            dataSetFile.Write(resStr + "Scratch" + '\n');
+            dataSetFile.Write(resStr + "ShakeHold" + '\n');
         }
 
         ~DatasetWriterController()
