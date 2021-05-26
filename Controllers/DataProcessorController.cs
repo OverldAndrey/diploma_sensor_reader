@@ -160,7 +160,7 @@ namespace TestSensors
             {
                 // topHeadDataSetWriter.writeData(topHeadReadings);
 
-                // topHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                topHeadSensorDataArrived.Invoke(this, USBeventArgs);
             }
             
             if (
@@ -170,7 +170,7 @@ namespace TestSensors
             {
                 // leftSideHeadDataSetWriter.writeData(leftSideHeadReadings);
 
-                // leftSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                leftSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
             }
             
             if (
@@ -180,7 +180,7 @@ namespace TestSensors
             {
                 // rightSideHeadDataSetWriter.writeData(rightSideHeadReadings);
 
-                // rightSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                rightSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
             }
 
             if (
@@ -196,7 +196,7 @@ namespace TestSensors
                 {
                     // rightHandDataSetWriter.writeData(rightHandReadings);
 
-                    // rightHandSensorDataArrived.Invoke(this, USBeventArgs);
+                    rightHandSensorDataArrived.Invoke(this, USBeventArgs);
                 }
             }
 
@@ -230,7 +230,7 @@ namespace TestSensors
                 {
                     // frontDataSetWriter.writeData(frontReadings);
 
-                    // frontSensorDataArrived.Invoke(this, USBeventArgs);
+                    frontSensorDataArrived.Invoke(this, USBeventArgs);
                 }
             }
         }
@@ -275,7 +275,10 @@ namespace TestSensors
             Console.WriteLine(processingResult);
             var eventArgs = new DataProcessorEventArgs();
             eventArgs.predictionData = processingResult.prediction;
-            // sensorDataProcessed.Invoke(this, eventArgs);
+            
+            sensorDataProcessed.Invoke(this, eventArgs);
+
+            eventArgs = null;
                 
             readings = Enumerable.Repeat(Enumerable.Repeat<short>(0, sensorQty), 100);
         }
