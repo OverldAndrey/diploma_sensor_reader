@@ -262,44 +262,74 @@ namespace TestSensors
 
         private void topHeadSensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
-            sensorDataProcessor(topHeadClassifier, topHeadSensorQty, ref topHeadReadings);
+            sensorDataProcessor(topHeadClassifier, topHeadSensorQty, ref topHeadReadings, "topHead");
         }
         
         private void leftSideHeadSensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
-            sensorDataProcessor(leftSideHeadClassifier, leftSideHeadSensorQty, ref leftSideHeadReadings);
+            sensorDataProcessor(leftSideHeadClassifier, leftSideHeadSensorQty, ref leftSideHeadReadings, "leftSideHead");
         }
         
         private void rightSideHeadSensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
-            sensorDataProcessor(rightSideHeadClassifier, rightSideHeadSensorQty, ref rightSideHeadReadings);
+            sensorDataProcessor(rightSideHeadClassifier, rightSideHeadSensorQty, ref rightSideHeadReadings, "rightSideHead");
         }
         
         private void rightHandSensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
-            sensorDataProcessor(rightHandClassifier, rightHandSensorQty, ref rightHandReadings);
+            sensorDataProcessor(rightHandClassifier, rightHandSensorQty, ref rightHandReadings, "rightHand");
         }
         
         private void leftHandSensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
-            sensorDataProcessor(leftHandClassifier, leftHandSensorQty, ref leftHandReadings);
+            sensorDataProcessor(leftHandClassifier, leftHandSensorQty, ref leftHandReadings, "leftHand");
         }
         
         private void frontSensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
-            sensorDataProcessor(frontClassifier, frontSensorQty, ref frontReadings);
+            sensorDataProcessor(frontClassifier, frontSensorQty, ref frontReadings, "front");
         }
 
         private void sensorDataProcessor(SignalClassifierController classifier, int sensorQty,
-            ref IEnumerable<IEnumerable<short>> readings)
+            ref IEnumerable<IEnumerable<short>> readings, string robotBodyPart)
         {
             var frame = readings;
 
             var processingResult = predictSingleFrame(frame, classifier, sensorQty);
-                
+
             Console.WriteLine(processingResult);
             var eventArgs = new DataProcessorEventArgs();
-            eventArgs.predictionData = processingResult.prediction;
+            if (processingResult.classPercentages.All(cp => cp < 0.6))
+            {
+                switch (robotBodyPart)
+                {
+                    case "topHead":
+                        eventArgs.predictionData = "OtherLowTopHead";
+                        break;
+                    case "leftSideHead":
+                        eventArgs.predictionData = "OtherLowLeftSideHead";
+                        break;
+                    case "rightSideHead":
+                        eventArgs.predictionData = "OtherLowRightSideHead";
+                        break;
+                    case "rightHand":
+                        eventArgs.predictionData = "OtherLowRightHand";
+                        break;
+                    case "leftHand":
+                        eventArgs.predictionData = "OtherLowLeftHand";
+                        break;
+                    case "front":
+                        eventArgs.predictionData = "OtherLowFront";
+                        break;
+                    default:
+                        eventArgs.predictionData = "OtherLowLeftSideHead";
+                        break;
+                }
+            }
+            else
+            {
+                eventArgs.predictionData = processingResult.prediction;
+            }
             
             sensorDataProcessed.Invoke(this, eventArgs);
 
