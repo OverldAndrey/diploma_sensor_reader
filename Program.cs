@@ -20,7 +20,12 @@ namespace TestSensors
 
         private async void Init()
         {
-            var usbController = new SensorUSBController("COM4");
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("appsettings.json");
+            
+            var configuration = configurationBuilder.Build();
+            
+            var usbController = new SensorUSBController(configuration.GetValue<string>("ControllerPort"));
             var processorController = new DataProcessorController(4, 2, 2, 2);
             var scenarioConverter = new ScenarioConverterController();
             var robotController = new RobotClientController();
