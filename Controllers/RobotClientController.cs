@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using RobotSenderSample;
 
 namespace TestSensors
@@ -6,6 +7,9 @@ namespace TestSensors
     public class RobotClientController
     {
         private RobotHubClient robotCommandClient;
+        private IConfiguration configuration;
+
+        private bool scenarioRunningFlag = false;
         public RobotClientController() {}
 
         public async void Init()
@@ -13,18 +17,39 @@ namespace TestSensors
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddJsonFile("appsettings.json");
             
-            var configuration = configurationBuilder.Build();
+            configuration = configurationBuilder.Build();
             
-            await using var commandClient = new RobotHubClient(configuration.GetValue<string>("RobotAddress"));
+            var commandClient = new RobotHubClient(configuration.GetValue<string>("RobotAddress"));
             robotCommandClient = commandClient;
             await commandClient.StartAsync();
+
+            robotCommandClient.scenarioStatusChanged += scenarioStatusUpdateHandler;
         }
 
         public async void scenarioHandler(object sender, ScenarioEventArgs eventArgs)
         {
             var scenario = eventArgs.scenario;
 
-            await robotCommandClient.Add(scenario);
+            if (!scenarioRunningFlag)
+            {
+                scenarioRunningFlag = true;
+                Console.WriteLine("Adding scenario");
+                Console.WriteLine(scenario);
+                await robotCommandClient.Add(scenario);
+            }
+        }
+
+        private void scenarioStatusUpdateHandler(object sender, RobotClientScenarioEventArgs eventArgs)
+        {
+            Console.WriteLine(eventArgs.scenarioMessage.Status.ToString());
+            
+            if (eventArgs.scenarioMessage.Status.ToString() == "Removed")
+            {
+                Console.WriteLine("Set flag to false");
+                scenarioRunningFlag = false;
+            }
+
+            eventArgs = null;
         }
     }
 }

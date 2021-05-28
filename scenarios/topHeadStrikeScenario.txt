@@ -1,0 +1,8 @@
+<scenario id="hit_head">
+  <bml id="1">
+    <hands id="2" lexeme="eyes_covering1" />
+    <head id="4" lexeme="eyes_covering1" />
+    <lids lexeme="lids-closed"/>
+    <speech id="1" text =" ой, не надо так "/>
+  </bml>
+</scenario>

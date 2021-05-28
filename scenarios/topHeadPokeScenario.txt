@@ -1,10 +1,11 @@
-<scenario name="touching_head_left">
+<scenario id="touching_head">
   <bml id="1">
     <brows lexeme="eyebrows-up2000"/>
     <lids lexeme="lids-110"/>
-    <neck lexeme="gaze-leftdown-04"/>
+    <neck lexeme="gaze-up-up"/>
     <body lexeme="breath23"/>
     <pupils lexeme="gaze-up-up"/>
+    <speech id="1" text="что?"/>
     <mouth lexeme="mouth-smile1"/>
   </bml>
 </scenario>

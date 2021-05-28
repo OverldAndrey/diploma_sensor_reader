@@ -1,0 +1,12 @@
+<scenario id="scratching_head_right">
+  <bml id="1">
+    <speech  text ="вау, приятно"/>
+    <mouth lexeme="mouth-smile1"/>
+    <hand_r lexeme="happy2"/>
+    <lids lexeme="lids-110"/>
+    <brows lexeme="eyebrows-up2000-2"/>
+    <pupils lexeme="gaze-up-down" />
+    <neck  lexeme="nod4" />
+    <lids lexeme="lids-closed100"/>
+  </bml>
+</scenario>

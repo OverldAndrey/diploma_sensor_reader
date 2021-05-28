@@ -9,11 +9,17 @@ using System.Threading.Tasks;
 
 namespace RobotSenderSample
 {
+    public class RobotClientScenarioEventArgs : EventArgs
+    {
+        public ScenarioStatusLogMessage scenarioMessage { get; set; }
+    }
     public class RobotHubClient : IAsyncDisposable
     {
         private readonly HubConnection _connection;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly ILogger<RobotHubClient> _logger;
+
+        public event EventHandler<RobotClientScenarioEventArgs> scenarioStatusChanged;
 
         public RobotHubClient(string url)
         {
@@ -21,6 +27,7 @@ namespace RobotSenderSample
             _connection = new HubConnectionBuilder()
                           .WithUrl(url)
                           .AddMessagePackProtocol()
+                          .WithAutomaticReconnect()
                           .ConfigureLogging(logging =>
                           {
                               // Log to the Console
@@ -129,6 +136,13 @@ namespace RobotSenderSample
         {
             _logger.LogInformation("Receive: {Time}: Scenario ({ScenarioId}) status changed to {Status}",
                                    scenarioStatus.Time, scenarioStatus.ScenarioId, scenarioStatus.Status);
+            
+            var scenarioStatusEventArgs = new RobotClientScenarioEventArgs();
+            scenarioStatusEventArgs.scenarioMessage = scenarioStatus;
+            scenarioStatusChanged.Invoke(this, scenarioStatusEventArgs);
+
+            scenarioStatusEventArgs = null;
+            
             return Task.CompletedTask;
         }
 

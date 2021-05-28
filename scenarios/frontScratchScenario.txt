@@ -1,0 +1,13 @@
+<scenario id="scratching_belly">
+  <bml id="1">
+    <brows lexeme="eyebrows-down-20" />
+    <lids lexeme="lids-90"/>
+    <hand_l id="2" lexeme="avtoman3" />
+    <hand_r lexeme="breath23" />
+    <speech id="1" text ="щекотно"/>
+    <neck id="4" lexeme="frustration2" />
+    <pupils id="5" lexeme="avtoman2" />
+    <lids lexeme="lids-closed100"/>
+    <mouth lexeme="mouth-smile1"/>
+  </bml>
+</scenario>

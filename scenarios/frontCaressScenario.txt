@@ -1,0 +1,12 @@
+<scenario id="stroking_belly">
+  <bml id="1">
+    <head id="4" lexeme="breath_up" />
+    <hands id="2" lexeme="breath_down" />
+    <brows lexeme="eyebrows-up2000"/>
+    <lids lexeme="lids-110"/>
+    <pupils id="3" lexeme="gaze-up-down" />
+    <lids lexeme="lids-closed100"/>
+    <speech id="1" text ="ой, приятно"/>
+    <mouth lexeme="mouth-smile1"/>
+  </bml>
+</scenario>

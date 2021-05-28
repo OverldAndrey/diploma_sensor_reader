@@ -1,0 +1,10 @@
+<scenario id="hit_head_left">
+  <bml id="1">
+    <lids lexeme="lids-90"/>
+    <hands id="2" lexeme="avtoman6" />
+    <neck id="4" lexeme="neckm04m04" />
+    <lids lexeme="lids-closed100"/>
+    <speech id="1" text =" ай"/>
+    <mouth lexeme="mouth-lip-bite"/>
+  </bml>
+</scenario>

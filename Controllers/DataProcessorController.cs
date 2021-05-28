@@ -129,11 +129,15 @@ namespace TestSensors
             frontDataSetWriter = 
                 new DatasetWriterController(
                     AppDomain.CurrentDomain.BaseDirectory + "/frontData.txt", frontSensorQty);
+            
+            Console.WriteLine("Data processor initialized");
         }
 
         public void sensorDataHandler(object sender, SensorUSBEventArgs USBeventArgs)
         {
             var data = USBeventArgs.sensorData.Split(' ').Select(d => Convert.ToInt16(d)).ToArray();
+            
+            // return;
 
             short[] topHeadData = {data[0], data[1], data[2], data[3]};
             short[] leftSideHeadData = {data[6], data[7]};
@@ -158,9 +162,16 @@ namespace TestSensors
                 // && readings.ToArray()[readings.ToArray().Length - 2].Any(d => d != 0)
             )
             {
-                // topHeadDataSetWriter.writeData(topHeadReadings);
+                if (topHeadReadings.All(r => r.All(rr => rr < 40)))
+                {
+                    Console.WriteLine("Drop");
+                }
+                else
+                {
+                    // topHeadDataSetWriter.writeData(topHeadReadings);
 
-                topHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                    topHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                }
             }
             
             if (
@@ -168,9 +179,16 @@ namespace TestSensors
                 && leftSideHeadReadings.ToArray()[1].Any(d => d != 0)
             )
             {
-                // leftSideHeadDataSetWriter.writeData(leftSideHeadReadings);
+                if (leftSideHeadReadings.All(r => r.All(rr => rr < 40)))
+                {
+                    Console.WriteLine("Drop");
+                }
+                else
+                {
+                    // leftSideHeadDataSetWriter.writeData(leftSideHeadReadings);
 
-                leftSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                    leftSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                }
             }
             
             if (
@@ -178,9 +196,16 @@ namespace TestSensors
                 && rightSideHeadReadings.ToArray()[1].Any(d => d != 0)
             )
             {
-                // rightSideHeadDataSetWriter.writeData(rightSideHeadReadings);
+                if (rightSideHeadReadings.All(r => r.All(rr => rr < 40)))
+                {
+                    Console.WriteLine("Drop");
+                }
+                else
+                {
+                    // rightSideHeadDataSetWriter.writeData(rightSideHeadReadings);
 
-                rightSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                    rightSideHeadSensorDataArrived.Invoke(this, USBeventArgs);
+                }
             }
 
             if (

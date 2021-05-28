@@ -1,10 +1,10 @@
-<scenario name="touching_belly">
+<scenario id="touching_hand_left">
   <bml id="1">
     <brows lexeme="eyebrows-up2000"/>
     <lids lexeme="lids-110"/>
-    <neck lexeme="nod4"/>
-    <body lexeme="avtoman3"/>
+    <neck lexeme="gaze-leftdown-04"/>
+    <hand_l lexeme="breath23"/>
     <pupils lexeme="gaze-up-down-reduced"/>
-    <mouth lexeme="mouth-lip-tube"/>
+    <mouth lexeme="mouth-lip-bite"/>
   </bml>
 </scenario>

@@ -1,0 +1,9 @@
+<scenario id="hit_head_right">
+  <bml id="1">
+    <figure id="2" lexeme="iconic24" />
+    <lids lexeme="lids-closed"/>
+    <mouth lexeme="mouth-lip-bite"/>
+    <speech id="1" text =" ой, больно "/>
+    <mouth lexeme="mouth-lip-bite"/>
+  </bml>
+</scenario>

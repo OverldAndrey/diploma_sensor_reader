@@ -1,0 +1,11 @@
+<scenario id="handshake_hand_right">
+  <bml id="1">
+    <hand_r lexeme="breath_up"/>
+    <hand_l lexeme="breath_down"/>
+    <brows lexeme="eyebrows-up2000" />
+    <pupils id="3" lexeme="gaze-up-up" />
+    <neck id="4" lexeme="gaze-rightdown-04" />
+    <lids lexeme="lids-closed"/>
+    <mouth lexeme="mouth-smile1"/>
+  </bml>
+</scenario>

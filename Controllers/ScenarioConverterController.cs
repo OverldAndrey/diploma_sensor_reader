@@ -13,54 +13,54 @@ namespace TestSensors
     public class ScenarioConverterController
     {
         private KeyValuePair<string, string>[] topHeadScenarioPairs = {
-            new KeyValuePair<string, string>("CaressTopHead", "topHeadOther.txt"),
-            new KeyValuePair<string, string>("ScratchTopHead", "topHeadOther.txt"),
-            new KeyValuePair<string, string>("PokeTopHead", "topHeadOther.txt"),
-            new KeyValuePair<string, string>("StrikeTopHead", "topHeadOther.txt"),
-            new KeyValuePair<string, string>("OtherLowTopHead", "topHeadOther.txt"),
-            new KeyValuePair<string, string>("OtherHighTopHead", "topHeadOther.txt"),
+            new KeyValuePair<string, string>("CaressTopHead", "topHeadCaressScenario.txt"),
+            new KeyValuePair<string, string>("ScratchTopHead", "topHeadScratchScenario.txt"),
+            new KeyValuePair<string, string>("PokeTopHead", "topHeadPokeScenario.txt"),
+            new KeyValuePair<string, string>("StrikeTopHead", "topHeadStrikeScenario.txt"),
+            new KeyValuePair<string, string>("OtherLowTopHead", "topHeadOtherScenario.txt"),
+            new KeyValuePair<string, string>("OtherHighTopHead", "topHeadOtherScenario.txt"),
         };
         
         private KeyValuePair<string, string>[] leftSideHeadScenarioPairs = {
-            new KeyValuePair<string, string>("CaressLeftSideHead", "leftSideHeadOther.txt"),
-            new KeyValuePair<string, string>("ScratchLeftSideHead", "leftSideHeadOther.txt"),
-            new KeyValuePair<string, string>("PokeLeftSideHead", "leftSideHeadOther.txt"),
-            new KeyValuePair<string, string>("StrikeLeftSideHead", "leftSideHeadOther.txt"),
-            new KeyValuePair<string, string>("OtherLowLeftSideHead", "leftSideHeadOther.txt"),
-            new KeyValuePair<string, string>("OtherHighLeftSideHead", "leftSideHeadOther.txt"),
+            new KeyValuePair<string, string>("CaressLeftSideHead", "leftSideHeadCaressScenario.txt"),
+            new KeyValuePair<string, string>("ScratchLeftSideHead", "leftSideHeadScratchScenario.txt"),
+            new KeyValuePair<string, string>("PokeLeftSideHead", "leftSideHeadPokeScenario.txt"),
+            new KeyValuePair<string, string>("StrikeLeftSideHead", "leftSideHeadStrikeScenario.txt"),
+            new KeyValuePair<string, string>("OtherLowLeftSideHead", "leftSideHeadOtherScenario.txt"),
+            new KeyValuePair<string, string>("OtherHighLeftSideHead", "leftSideHeadOtherScenario.txt"),
         };
         
         private KeyValuePair<string, string>[] rightSideHeadScenarioPairs = {
-            new KeyValuePair<string, string>("CaressRightSideHead", "rightSideHeadOther.txt"),
-            new KeyValuePair<string, string>("ScratchRightSideHead", "rightSideHeadOther.txt"),
-            new KeyValuePair<string, string>("PokeRightSideHead", "rightSideHeadOther.txt"),
-            new KeyValuePair<string, string>("StrikeRightSideHead", "rightSideHeadOther.txt"),
-            new KeyValuePair<string, string>("OtherLowRightSideHead", "rightSideHeadOther.txt"),
-            new KeyValuePair<string, string>("OtherHighRightSideHead", "rightSideHeadOther.txt"),
+            new KeyValuePair<string, string>("CaressRightSideHead", "rightSideHeadCaressScenario.txt"),
+            new KeyValuePair<string, string>("ScratchRightSideHead", "rightSideHeadScratchScenario.txt"),
+            new KeyValuePair<string, string>("PokeRightSideHead", "rightSideHeadPokeScenario.txt"),
+            new KeyValuePair<string, string>("StrikeRightSideHead", "rightSideHeadStrikeScenario.txt"),
+            new KeyValuePair<string, string>("OtherLowRightSideHead", "rightSideHeadOtherScenario.txt"),
+            new KeyValuePair<string, string>("OtherHighRightSideHead", "rightSideHeadOtherScenario.txt"),
         };
         
         private KeyValuePair<string, string>[] rightHandScenarioPairs = {
-            new KeyValuePair<string, string>("PokeRightHand", "rightHandOther.txt"),
-            new KeyValuePair<string, string>("ShakeHoldRightHand", "rightHandOther.txt"),
-            new KeyValuePair<string, string>("ShakeGripRightHand", "rightHandOther.txt"),
-            new KeyValuePair<string, string>("OtherLowRightHand", "rightHandOther.txt"),
-            new KeyValuePair<string, string>("OtherHighRightHand", "rightHandOther.txt"),
+            new KeyValuePair<string, string>("PokeRightHand", "rightHandPokeScenario.txt"),
+            new KeyValuePair<string, string>("ShakeHoldRightHand", "rightHandShakeScenario.txt"),
+            new KeyValuePair<string, string>("ShakeGripRightHand", "rightHandShakeScenario.txt"),
+            new KeyValuePair<string, string>("OtherLowRightHand", "rightHandOtherScenario.txt"),
+            new KeyValuePair<string, string>("OtherHighRightHand", "rightHandOtherScenario.txt"),
         };
         
         private KeyValuePair<string, string>[] leftHandScenarioPairs = {
-            new KeyValuePair<string, string>("PokeLeftHand", "leftHandOther.txt"),
-            new KeyValuePair<string, string>("ShakeHoldLeftHand", "leftHandOther.txt"),
-            new KeyValuePair<string, string>("ShakeGripLeftHand", "leftHandOther.txt"),
-            new KeyValuePair<string, string>("OtherLowLeftHand", "leftHandOther.txt"),
-            new KeyValuePair<string, string>("OtherHighLeftHand", "leftHandOther.txt"),
+            new KeyValuePair<string, string>("PokeLeftHand", "leftHandPokeScenario.txt"),
+            new KeyValuePair<string, string>("ShakeHoldLeftHand", "leftHandShakeScenario.txt"),
+            new KeyValuePair<string, string>("ShakeGripLeftHand", "leftHandShakeScenario.txt"),
+            new KeyValuePair<string, string>("OtherLowLeftHand", "leftHandOtherScenario.txt"),
+            new KeyValuePair<string, string>("OtherHighLeftHand", "leftHandOtherScenario.txt"),
         };
         
         private KeyValuePair<string, string>[] frontScenarioPairs = {
-            new KeyValuePair<string, string>("CaressFront", "frontOther.txt"),
-            new KeyValuePair<string, string>("ScratchFront", "frontOther.txt"),
-            new KeyValuePair<string, string>("PokeFront", "frontOther.txt"),
-            new KeyValuePair<string, string>("OtherLowFront", "frontOther.txt"),
-            new KeyValuePair<string, string>("OtherHighFront", "frontOther.txt"),
+            new KeyValuePair<string, string>("CaressFront", "frontCaressScenario.txt"),
+            new KeyValuePair<string, string>("ScratchFront", "frontScratchScenario.txt"),
+            new KeyValuePair<string, string>("PokeFront", "frontPokeScenario.txt"),
+            new KeyValuePair<string, string>("OtherLowFront", "frontOtherScenario.txt"),
+            new KeyValuePair<string, string>("OtherHighFront", "frontOtherScenario.txt"),
         };
 
         private Dictionary<string, string> topHeadMapping;

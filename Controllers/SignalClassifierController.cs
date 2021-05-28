@@ -7,6 +7,7 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Data.DataView;
+using Microsoft.ML.Trainers.LightGbm;
 
 namespace TestSensors
 {
@@ -16,6 +17,9 @@ namespace TestSensors
         public MulticlassPredictionTransformer<OneVersusAllModelParameters> model;
         public EstimatorChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> estimatorPipeline;
         public TransformerChain<MulticlassPredictionTransformer<OneVersusAllModelParameters>> transformer;
+        // public MulticlassPredictionTransformer<NaiveBayesMulticlassModelParameters> model;
+        // public EstimatorChain<MulticlassPredictionTransformer<NaiveBayesMulticlassModelParameters>> estimatorPipeline;
+        // public TransformerChain<MulticlassPredictionTransformer<NaiveBayesMulticlassModelParameters>> transformer;
 
         public string[] categories;
         
@@ -62,17 +66,34 @@ namespace TestSensors
                 .Append(mlContext.Transforms.NormalizeMinMax("readings", fixZero: true))
                 .Append(mlContext.MulticlassClassification.Trainers
                     .OneVersusAll(mlContext.BinaryClassification.Trainers
-                        .LdSvm(featureColumnName: "readings")));
+                        .FastTree(featureColumnName: "readings")));
+                // .Append(mlContext.MulticlassClassification.Trainers
+                //     .NaiveBayes(featureColumnName: "readings"));
+                // .Append(mlContext.MulticlassClassification.Trainers
+                //     .OneVersusAll(mlContext.BinaryClassification.Trainers
+                //         .LbfgsLogisticRegression(featureColumnName: "readings")));
+                // .Append(mlContext.MulticlassClassification.Trainers
+                //         .OneVersusAll(mlContext.BinaryClassification.Trainers
+                //             .LdSvm(featureColumnName: "readings")));
 
             transformer = estimatorPipeline.Fit(split.TrainSet);
 
+            // var OVAEstimator = mlContext.MulticlassClassification.Trainers
+            //     .OneVersusAll(mlContext.BinaryClassification.Trainers
+            //         .LbfgsLogisticRegression(featureColumnName: "readings"));
+            // var OVAEstimator = mlContext.MulticlassClassification.Trainers
+            //     .OneVersusAll(mlContext.BinaryClassification.Trainers
+            //         .LdSvm(featureColumnName: "readings"));
+            // var NBEstimator = mlContext.MulticlassClassification.Trainers
+            //     .NaiveBayes(featureColumnName: "readings");
             var OVAEstimator = mlContext.MulticlassClassification.Trainers
                 .OneVersusAll(mlContext.BinaryClassification.Trainers
-                    .LdSvm(featureColumnName: "readings"));
+                    .FastTree(featureColumnName: "readings"));
 
             var transformedTrainingData = transformer.Transform(split.TrainSet);
 
             model = OVAEstimator.Fit(transformedTrainingData);
+            // model = NBEstimator.Fit(transformedTrainingData);
             
             Console.WriteLine("Model fitted");
 

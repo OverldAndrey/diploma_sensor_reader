@@ -1,0 +1,12 @@
+<scenario id="scratching_head">
+  <bml id="1">
+    <head lexeme="expectation2" />
+    <brows lexeme="eyebrows-up-40" />
+    <body lexeme="expectation2" />
+    <pupils lexeme="gaze-up-down" />
+    <lids lexeme="lids-110"/>
+    <speech text ="давай еще"/>
+    <mouth lexeme="mouth-smile1"/>
+    <lids lexeme="lids-closed100"/>
+  </bml>
+</scenario>

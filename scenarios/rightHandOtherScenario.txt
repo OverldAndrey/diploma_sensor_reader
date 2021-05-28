@@ -1,0 +1,11 @@
+<scenario id="touching_hand_right">
+  <bml id="1">
+    <brows lexeme="eyebrows-up2000"/>
+    <lids lexeme="lids-110"/>
+    <neck lexeme="gaze-rightdown-04"/>
+    <body lexeme="breath23"/>
+    <pupils lexeme="gaze-up-down-reduced"/>
+    <mouth lexeme="mouth-lip-bite"/>
+    <speech id="1" text =" привет "/>
+  </bml>
+</scenario>

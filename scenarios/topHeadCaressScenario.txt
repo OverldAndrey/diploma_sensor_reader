@@ -1,0 +1,9 @@
+<scenario id="stroking_head">
+  <bml id="1">
+    <hands id="7" lexeme="breath30" />
+    <head id="3"  lexeme="nod3" />
+    <speech id="1" text ="кайф"/>
+    <mouth lexeme="mouth-smile1"/> 
+    <lids lexeme="lids-closed100"/>
+  </bml>
+</scenario>
