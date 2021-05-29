@@ -155,6 +155,8 @@ namespace TestSensors
             
             // Console.WriteLine(USBeventArgs.sensorData);
             
+            // return;
+
             if (
                 topHeadReadings.ToArray()[0].All(d => d == 0)
                 && topHeadReadings.ToArray()[1].Any(d => d != 0)
@@ -299,7 +301,8 @@ namespace TestSensors
 
             Console.WriteLine(processingResult);
             var eventArgs = new DataProcessorEventArgs();
-            if (processingResult.classPercentages.All(cp => cp < 0.6))
+            if (processingResult.classPercentages.All(cp => cp < 0.6) 
+                && !processingResult.prediction.Contains("Strike"))
             {
                 switch (robotBodyPart)
                 {
